@@ -108,11 +108,71 @@ double ** multiply(double **mtx, int y, int x, double **mtx2, int y2, int x2){
 }
 
 double ** inverse(double **mtx, int y, int x){
+    //Creates augmented matrix
     double **augm = (double**)calloc(y, sizeof(double));
     for(int i=0;i<y;i++){
         augm[i] = (double*)calloc(2*x,sizeof(double));
         for(int j=0; j<x; j++){
-            
+            augm[i][j] = mtx[i][j];
+        }
+        for(int k=x; k<2*x; k++){
+            if(k-x == i){
+                augm[i][x] = 1;
+            }else{
+                augm[i][x] = 0;
+            }
         }
     }
+    //Row reduction EF
+    for(int i = 0; i<y; i++){
+        int pivot = i;
+        //Scales row to make pivot 1
+        if(augm[i][pivot] != 1 && augm[i][pivot] != 0){
+            for(int j=i; j<2*x; j++){
+                augm[i][j] = augm[i][j]/augm[i][pivot];
+            }
+        }
+        //Reduces all rows below pivot
+        for(int k=i+1; k<y; k++){
+            if(augm[k][pivot] == 0) break;
+            int scalar = augm[k][pivot];
+            for(int l=pivot; l<2*x;l++){
+                augm[k][l] = augm[k][l] - (scalar*augm[i][l]);
+            }
+        }
+    }
+    //Row Reduction RREF
+    for(int i = y-1; i>0; i--){
+        for(int j = x-1; j >=0; j--){
+            for(int k = i-1; k>=0; k--){
+                int scalar = augm[k][j];
+                for(int l = j; l<2*x; l++){
+                    augm[k][l] = augm[k][l] - (scalar * augm[i][l]); 
+                }
+            }
+        }
+    }
+    //Check if inverse
+    int inverse = 1;
+    for(int i =0; i<y; i++){
+        for(int j=0;j<x;j++){
+            if(j == i) {
+                if(augm[i][j] != 1) inverse=0;
+            }else{
+                if(augm[i][j] != 0) inverse=0;
+            }
+        }
+    }
+    //Get inverse from augm
+    double **inv;
+    if(inverse == 1){
+        inv = (double **)calloc(y, sizeof(double));
+        for(int i = 0; i<y;i++){
+            inv[i] = (double *)calloc(x, sizeof(double));
+            for(int j=0; j<x; j++){
+                inv[i][j] = augm[i][x+j];
+            }
+        }
+    }
+    return inv;
 }
