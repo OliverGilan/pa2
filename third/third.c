@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     // printf("\n\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
-            printf("%d ", grid[i][j]);
+            printf("%d\t", grid[i][j]);
         }
         printf("\n");
     }
