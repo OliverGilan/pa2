@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void fill(int **);
+int fill(int **);
 void clean(int **, int, int);
 
 int main(int argc, char **argv)
@@ -41,17 +41,21 @@ int main(int argc, char **argv)
 
     fill(grid);
 
+    // printf("\n\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
+            // printf("%d ", grid[i][j]);
             if(grid[i][j] == 0){
                 printf("no-solution");
                 return 0;
             }
         }
+        // printf("\n");
     }
+    // printf("\n\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
-            printf("%d\t", grid[i][j]);
+            printf("%d ", grid[i][j]);
         }
         printf("\n");
     }
@@ -69,7 +73,7 @@ void clean(int **matrix, int x, int y){
     free(matrix);
 }
 
-void fill(int **grid){
+int fill(int **grid){
     // printf("run\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
@@ -99,21 +103,38 @@ void fill(int **grid){
                         set[grid[l][m]-1] = 0;
                     }
                 }
-                // printf("subgrid\n");
-                int counter = 0;
-                int answer = 0;
+                int count = 0;
+                // printf("SET [%d][%d]:",i,j);
                 for(int k=0; k<9;k++){
-                    if(set[k] != 0){
-                        counter++;
-                        answer = set[k];
+                    // printf("%d  ", set[k]);
+                    if(set[k]!= 0){
+                        count++;
                     }
                 }
-                if(counter == 1){
-                    grid[i][j] = answer;
-                    fill(grid);
+                // printf("\n");
+                if(count == 0){
+                    return 1;
+                }
+                int tries = 0;
+                for(int k=0; k<9;k++){
+                    if(set[k]!= 0 && grid[i][j] == 0){
+                        grid[i][j] = set[k];
+                        set[k] = 0;
+                        // printf("TRY: %d\n", grid[i][j]);
+                        int ans = fill(grid);
+                        // printf("ANS: %d\n", ans);
+                        if(ans == 1){
+                            tries++;
+                            grid[i][j] = 0;
+                            if(tries == count){
+                                return 1;
+                            }
+                        }
+                    }
                 }
                 free(set);
             }
         }
     }
+    return 0;
 }
