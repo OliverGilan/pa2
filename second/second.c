@@ -31,14 +31,6 @@ int main(int argc, char **argv)
     }
     fclose(input);
 
-    //Debug
-    // for(int i = 0; i < 9; i++){
-    //     for(int j=0;j<9;j++){
-    //         printf("%d ", grid[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
     fill(grid);
 
     for(int i = 0; i < 9; i++){
@@ -70,7 +62,6 @@ void clean(int **matrix, int x, int y){
 }
 
 void fill(int **grid){
-    // printf("run\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
             if(grid[i][j] == 0){
@@ -90,16 +81,13 @@ void fill(int **grid){
                         set[grid[l][j]-1] = 0;
                     }
                 }
-                // printf("running\n");
                 //Check subgrid
                 for(int l=(i-(i%3)); l<(i-(i%3)+3); l++){
                     for(int m=(j-(j%3)); m<(j-(j%3))+3; m++){
-                        // printf("l: %d \nm: %d\n", l, m);
                         if(grid[l][m] != 0)
                         set[grid[l][m]-1] = 0;
                     }
                 }
-                // printf("subgrid\n");
                 int counter = 0;
                 int answer = 0;
                 for(int k=0; k<9;k++){

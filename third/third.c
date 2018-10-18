@@ -31,28 +31,15 @@ int main(int argc, char **argv)
     }
     fclose(input);
 
-    //Debug
-    // for(int i = 0; i < 9; i++){
-    //     for(int j=0;j<9;j++){
-    //         printf("%d ", grid[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
     fill(grid);
-
-    // printf("\n\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
-            // printf("%d ", grid[i][j]);
             if(grid[i][j] == 0){
                 printf("no-solution");
                 return 0;
             }
         }
-        // printf("\n");
     }
-    // printf("\n\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
             printf("%d\t", grid[i][j]);
@@ -74,7 +61,6 @@ void clean(int **matrix, int x, int y){
 }
 
 int fill(int **grid){
-    // printf("run\n");
     for(int i = 0; i < 9; i++){
         for(int j=0;j<9;j++){
             if(grid[i][j] == 0){
@@ -94,24 +80,21 @@ int fill(int **grid){
                         set[grid[l][j]-1] = 0;
                     }
                 }
-                // printf("running\n");
                 //Check subgrid
                 for(int l=(i-(i%3)); l<(i-(i%3)+3); l++){
                     for(int m=(j-(j%3)); m<(j-(j%3))+3; m++){
-                        // printf("l: %d \nm: %d\n", l, m);
                         if(grid[l][m] != 0)
                         set[grid[l][m]-1] = 0;
                     }
                 }
+                //Count possibilities
                 int count = 0;
-                // printf("SET [%d][%d]:",i,j);
                 for(int k=0; k<9;k++){
-                    // printf("%d  ", set[k]);
                     if(set[k]!= 0){
                         count++;
                     }
                 }
-                // printf("\n");
+                //Return as failure if no possible solution
                 if(count == 0){
                     return 1;
                 }
@@ -120,9 +103,9 @@ int fill(int **grid){
                     if(set[k]!= 0 && grid[i][j] == 0){
                         grid[i][j] = set[k];
                         set[k] = 0;
-                        // printf("TRY: %d\n", grid[i][j]);
                         int ans = fill(grid);
-                        // printf("ANS: %d\n", ans);
+
+                        //Return as failure if all possible solutions have been tried
                         if(ans == 1){
                             tries++;
                             grid[i][j] = 0;

@@ -28,9 +28,7 @@ int main(int argc, char **argv)
         Z[i] = (double *)calloc(K+1, sizeof(double));
         for(int j = 0; j <= K; j++){
             fscanf(training, "%lf%*c ", &Z[i][j]);
-            // printf("%lf\t", Z[i][j]);
         }
-        // printf("\n");
     }
     fclose(training);
 
@@ -47,74 +45,25 @@ int main(int argc, char **argv)
     }
     fclose(data);
 
-    //DEBUG
-    // for(int i = 0; i<N; i++){
-    //     for(int j =0;j<=K;j++){
-    //         printf("%lf\t", Z[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
     double **X = (double **)calloc(N, sizeof(double));
     for(int i = 0; i < N; i++){
         X[i] = (double *)calloc(K+1, sizeof(double));
         *X[i] = (double)1;
         for(int j = 1; j <= K; j++){
             X[i][j] = Z[i][j-1];
-            // printf("%lf\t", X[i][j]);
         }
-        // printf("\n");
     }
 
-    //DEBUG
-    // printf("\n\n\n");
-    // for(int i = 0; i<N; i++){
-    //     for(int j =0;j<=K;j++){
-    //         printf("%lf\t", X[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-
-    // printf("\n\n\n");
     double **Y = (double **)calloc(N,sizeof(double));
     for(int i=0; i< N; i++){
         Y[i] = (double *)calloc(1,sizeof(double));
         int j = K;
         *Y[i] = Z[i][j];
-        // printf("%lf\n", *Y[i]);
     }
 
-    double **Xt = transpose(X, N, K+1); 
-    // printf("\n\n\n");
-    // for(int i = 0; i<K+1; i++){
-    //     for(int j =0;j< N;j++){
-    //         printf("%lf ", Xt[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n\n");
-
+    double **Xt = transpose(X, N, K+1);
     double **XX = multiply(Xt, K+1, N, X, N, K+1);
-    // printf("\n\n\n");
-    // for(int i = 0; i<K+1; i++){
-    //     for(int j =0;j< K+1;j++){
-    //         printf("%0.0lf ", XX[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("DONE MULTIPLYING\n");
     double **XXinv = inverse(XX, K+1, K+1);
-    // printf("\n\n\n");
-    // if(XXinv == NULL){
-    //     printf("NULL\n");
-    // }
-    // for(int i = 0; i<K+1; i++){
-    //     for(int j =0;j<K+1;j++){
-    //         printf("%lf ", XXinv[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("done INVERSING\n");
     double **XInv = multiply(XXinv, K+1, K+1, Xt, K+1, N);
     double **W = multiply(XInv, K+1, N, Y, N, 1);
     double **Final = multiply(Xtest, num, K+1, W, K+1, 1);
@@ -147,9 +96,7 @@ double ** transpose(double **mtx, int N, int K){
         Xt[i] = (double *)calloc(N, sizeof(double));
         for(int j = 0; j<N; j++){
             Xt[i][j] = mtx[j][i];
-            // printf("%lf ",Xt[i][j]);
         }
-        // printf("\n");
     }
     return Xt;
 }
@@ -164,9 +111,7 @@ double ** multiply(double **mtx, int y, int x, double **mtx2, int y2, int x2){
                 sum += mtx[i][k] * mtx2[k][j];
             }
             XX[i][j] = sum;
-            // printf("%lf  ", XX[i][j]);
         }
-        // printf("\n");
     }
     return XX;
 }
@@ -187,13 +132,6 @@ double ** inverse(double **mtx, int y, int x){
             }
         }
     }
-    // printf("\n\n\n");
-    // for(int i = 0; i<y; i++){
-    //     for(int j =0;j< 2*x;j++){
-    //         printf("%0.0lf ", augm[i][j]);
-    //     }
-    //     printf("\n");
-    // }
 
     //Row reduction EF
     for(int i = 0; i<y; i++){
@@ -214,13 +152,7 @@ double ** inverse(double **mtx, int y, int x){
             }
         }
     }
-    // printf("\n\n\n");
-    // for(int i = 0; i<y; i++){
-    //     for(int j =0;j< 2*x;j++){
-    //         printf("%lf ", augm[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+
     //Row Reduction RREF
     for(int i = y-1; i>0; i--){
         int j = i;
@@ -233,24 +165,6 @@ double ** inverse(double **mtx, int y, int x){
         }
     }
 
-    // printf("\n\n\n");
-    // for(int i = 0; i<y; i++){
-    //     for(int j =0;j< 2*x;j++){
-    //         printf("%lf ", augm[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    //Check if inverse
-    // int inverse = 1;
-    // for(int i =0; i<y; i++){
-    //     for(int j=0;j<x;j++){
-    //         if(j == i) {
-    //             if(augm[i][j] != 1) inverse=0;
-    //         }else{
-    //             if(augm[i][j] != 0) inverse=0;
-    //         }
-    //     }
-    // }
     //Get inverse from augm
         double **inv = (double **)calloc(y, sizeof(double));
         for(int i = 0; i<y;i++){
